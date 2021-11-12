@@ -1,0 +1,132 @@
+version: '3.7'
+networks:
+  proxy:
+    external: true
+  internal:
+    external: false
+services:
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - VIRTUAL_HOST=$HOSTNAME
+      - LETSENCRYPT_HOST=$HOSTNAME
+      - LETSENCRYPT_EMAIL=$USEREMAIL
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $USERDIR/config/ombi:/config
+  plex:
+    image: plexinc/pms-docker
+    container_name: plex
+    volumes:
+      - $USERDIR/config/plexdata/config:/config
+      - $USERDIR/config/transcode:/transcode
+      - $MEDIADIR/tv:/tv
+      - $MEDIADIR/movies:/movies
+      - $MEDIADIR/education:/education
+    networks:
+      - internal
+    ports:
+      - "32400:32400/tcp"
+      - "3005:3005/tcp"
+      - "8324:8324/tcp"
+      - "32469:32469/tcp"
+      - "1900:1900/udp"
+      - "32410:32410/udp"
+      - "32412-32414:32412-32414/udp"
+      - "5353:5353/udp"
+    environment:
+      - TZ=$TZ
+      - PLEX_UID=$PUID
+      - PLEX_GID=$PGID
+      - VERSION=latest
+      - $ADVERTISEIP
+    restart: always
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/sonarr:/config
+      - $MEDIADIR/tv:/tv
+      - $MEDIADIR/downloads:/downloads
+    networks:
+      - internal
+    ports:
+      - 8989:8989
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: always
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/radarr:/config
+      - $MEDIADIR/movies:/movies
+      - $MEDIADIR/downloads:/downloads
+    networks:
+      - internal
+    ports:
+      - 7878:7878
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: always
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/nzbget:/config
+      - $MEDIADIR/downloads:/downloads
+    networks:
+      - internal
+    ports:
+      - 6789:6789
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: always
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/tautulli:/config
+      - $USERDIR/config/plexdata/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+    networks:
+      - proxy
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+      - VIRTUAL_HOST=history.$HOSTNAME
+      - LETSENCRYPT_HOST=history.$HOSTNAME
+      - LETSENCRYPT_EMAIL=$USEREMAIL
+    restart: always
+  ddclient:
+    image: linuxserver/ddclient
+    container_name: ddclient
+    networks:
+      - internal
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $USERDIR/config/ddclient:/config
+    restart: unless-stopped

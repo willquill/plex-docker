@@ -50,7 +50,7 @@ services:
       - PLEX_GID=$PGID
       - VERSION=latest
       - $ADVERTISEIP
-    restart: always
+    restart: unless-stopped
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
@@ -67,7 +67,7 @@ services:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
-    restart: always
+    restart: unless-stopped
   radarr:
     image: linuxserver/radarr
     container_name: radarr
@@ -84,7 +84,21 @@ services:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
-    restart: always
+    restart: unless-stopped
+  bazarr:
+    image: lscr.io/linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $USERDIR/config:/config
+      - $MEDIADIR/movies:/movies
+      - $MEDIADIR/to/tv:/tv
+    ports:
+      - 6767:6767
+    restart: unless-stopped  
   nzbget:
     image: linuxserver/nzbget
     container_name: nzbget
@@ -100,7 +114,7 @@ services:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
-    restart: always
+    restart: unless-stopped
   tautulli:
     image: linuxserver/tautulli
     container_name: tautulli
@@ -117,7 +131,7 @@ services:
       - VIRTUAL_HOST=history.$HOSTNAME
       - LETSENCRYPT_HOST=history.$HOSTNAME
       - LETSENCRYPT_EMAIL=$USEREMAIL
-    restart: always
+    restart: unless-stopped
   ddclient:
     image: linuxserver/ddclient
     container_name: ddclient

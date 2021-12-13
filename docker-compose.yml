@@ -95,7 +95,7 @@ services:
     volumes:
       - $USERDIR/config/bazarr:/config
       - $MEDIADIR/movies:/movies
-      - $MEDIADIR/to/tv:/tv
+      - $MEDIADIR/tv:/tv
     ports:
       - 6767:6767
     restart: unless-stopped

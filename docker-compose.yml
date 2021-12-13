@@ -99,20 +99,6 @@ services:
     ports:
       - 6767:6767
     restart: unless-stopped
-  readarr:
-    image: ghcr.io/linuxserver/readarr
-    container_name: readarr
-    environment:
-      - TZ=$TZ
-      - PUID=$PUID
-      - PGID=$PGID
-    volumes:
-      - $USERDIR/config/readarr:/config
-      - $MEDIADIR/books:/books
-      - $MEDIADIR/downloads:/downloads
-    ports:
-      - 8787:8787
-    restart: unless-stopped  
   nzbget:
     image: linuxserver/nzbget
     container_name: nzbget

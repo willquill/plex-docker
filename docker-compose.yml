@@ -132,6 +132,21 @@ services:
       - LETSENCRYPT_HOST=history.$HOSTNAME
       - LETSENCRYPT_EMAIL=$USEREMAIL
     restart: unless-stopped
+  organizr:
+    image: organizr/organizr
+    container_name: organizr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/organizr:/config
+    networks:
+      - internal
+    ports:
+      - 8080:80
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: unless-stopped
   ddclient:
     image: linuxserver/ddclient
     container_name: ddclient

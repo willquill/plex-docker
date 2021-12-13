@@ -6,8 +6,10 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Ombi
 * Radarr
 * Sonarr
+* Bazarr
 * Tautulli
 * NZBGet
+* Organizr
 * ddclient
 
 ## Tree Structure
@@ -55,7 +57,7 @@ Make config directory.
 
 Create the directories. There's probably a more efficient way to do this, but it gets the job done.
 
-`mkdir config/nzbget && mkdir config/ombi && mkdir config/plexdata && mkdir config/radarr && mkdir config/sonarr && mkdir config/tautulli && mkdir config/transcode`
+`mkdir config/nzbget && mkdir config/ombi && mkdir config/plexdata && mkdir config/radarr && mkdir config/sonarr && mkdir config/tautulli && mkdir config/bazarr && mkdir config/organizr && mkdir config/transcode`
 
 Clone the repo locally.
 
@@ -106,6 +108,7 @@ Examples:
 * http://localhost:6789 - NZBGet
 * http://localhost:8989 - Sonarr
 * http://localhost:7878 - Radarr
+* http://localhost:6767 - Bazarr
 * https://yourdomain.com (for Ombi)
 * https://history.yourdomain.com (for Tautulli)
 

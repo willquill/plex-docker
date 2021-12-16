@@ -1,6 +1,6 @@
 version: '3.7'
 networks:
-  proxy:
+  nginx-proxy:
     external: true
   internal:
     external: false
@@ -12,14 +12,13 @@ services:
     security_opt:
       - no-new-privileges:true
     networks:
-      - proxy
+      - nginx-proxy
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
       - VIRTUAL_HOST=$HOSTNAME
       - LETSENCRYPT_HOST=$HOSTNAME
-      - LETSENCRYPT_EMAIL=$USEREMAIL
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -123,14 +122,13 @@ services:
       - $USERDIR/config/tautulli:/config
       - $USERDIR/config/plexdata/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
     networks:
-      - proxy
+      - nginx-proxy
     environment:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
       - VIRTUAL_HOST=history.$HOSTNAME
       - LETSENCRYPT_HOST=history.$HOSTNAME
-      - LETSENCRYPT_EMAIL=$USEREMAIL
     restart: unless-stopped
   organizr:
     image: organizr/organizr

@@ -1,4 +1,4 @@
-# Introduction
+# plex-docker
 
 This repo will help you deploy your own Plex infrastructure, including these Docker containers:
 
@@ -29,25 +29,34 @@ $ tree ~ -a -L 2
 │   ├── tautulli
 │   └── transcode
 ├── plex-docker
-│   ├── docker-compose.yml
+│   ├── docker-compose.yml # This will launch the actual applications
 │   ├── .env
-├── proxy
-│   ├── <omitted contents for brevity>
+│   ├── proxy
+│   │   ├── docker-compose.yml # This will launch the proxy for internet-facing applications
+│   │   ├── .env
 ```
 
-# Setup
+## Install docker and docker-compose
 
-## Getting Proxy ready
+Follow whatever guide you can find for your OS/distribution.
 
-First, install docker and docker-compose.
+## Clone this repository into your home directory
 
-Next, run this command to prepare your proxy infrastructure.
+`cd ~ && git clone https://github.com/willquill/plex-docker.git`
 
-`git clone https://github.com/evertramos/nginx-proxy-automation.git`
+## Getting Proxy ready *(optional)*
 
-Then follow the rest of the guide [here](https://github.com/evertramos/nginx-proxy-automation).
+Only do this if you want any of the containers to be accessible from the internet
 
-You'll use the VIRTUAL_HOST, LETSENCRYPT_HOST, and LETSENCRYPT_EMAIL environment variables in your docker-compose.yml coming up in the next step.
+Create proxy network:
+
+`docker network create nginx-proxy`
+
+In the proxy directory, rename `.env-sample` to `.env` and modify the email address within.
+
+Launch the proxies:
+
+`cd ~/plex-docker/proxy && docker-compose up -d`
 
 ## Preparing your config
 
@@ -59,13 +68,9 @@ Create the directories. There's probably a more efficient way to do this, but it
 
 `mkdir config/nzbget && mkdir config/ombi && mkdir config/plexdata && mkdir config/radarr && mkdir config/sonarr && mkdir config/tautulli && mkdir config/bazarr && mkdir config/organizr && mkdir config/transcode`
 
-Clone the repo locally.
+Prepare the env file.
 
-`git clone https://github.com/willquill/plex-docker.git`
-
-Go into repo and prepare the env file.
-
-`cd plex-docker && mv .env-sample .env`
+`cd ~/plex-docker && mv .env-sample .env`
 
 Now edit the env file for your needs.
 
@@ -87,7 +92,7 @@ Make sure you are inside the `~/plex-docker` directory when you run this.
 
 ## Prepare nzbget.conf
 
-This is what my primary directory paths look like in ~/config/nzbget/nzbget.conf
+This is what my primary directory paths look like in `~/config/nzbget/nzbget.conf`:
 
 ```sh
 MainDir=/config

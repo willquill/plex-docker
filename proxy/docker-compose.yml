@@ -23,12 +23,11 @@ services:
       - DEFAULT_EMAIL=$EMAIL
       - NGINX_PROXY_CONTAINER=nginx-proxy
  
- 
 networks:
   default:
-    external:
-      name: nginx-proxy
- 
+    name: nginx-proxy
+    external: true
+
 volumes:
   letsencrypt-certs:
   letsencrypt-vhost-d:

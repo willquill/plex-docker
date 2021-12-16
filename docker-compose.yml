@@ -5,24 +5,6 @@ networks:
   internal:
     external: false
 services:
-  ombi:
-    image: linuxserver/ombi
-    container_name: ombi
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    networks:
-      - nginx-proxy
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - VIRTUAL_HOST=$HOSTNAME
-      - LETSENCRYPT_HOST=$HOSTNAME
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $USERDIR/config/ombi:/config
   plex:
     image: plexinc/pms-docker
     container_name: plex
@@ -50,23 +32,6 @@ services:
       - VERSION=latest
       - $ADVERTISEIP
     restart: unless-stopped
-  sonarr:
-    image: linuxserver/sonarr
-    container_name: sonarr
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/sonarr:/config
-      - $MEDIADIR/tv:/tv
-      - $MEDIADIR/downloads:/downloads
-    networks:
-      - internal
-    ports:
-      - 8989:8989
-    environment:
-      - TZ=$TZ
-      - PUID=$PUID
-      - PGID=$PGID
-    restart: unless-stopped
   radarr:
     image: linuxserver/radarr
     container_name: radarr
@@ -79,6 +44,23 @@ services:
       - internal
     ports:
       - 7878:7878
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: unless-stopped
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/sonarr:/config
+      - $MEDIADIR/tv:/tv
+      - $MEDIADIR/downloads:/downloads
+    networks:
+      - internal
+    ports:
+      - 8989:8989
     environment:
       - TZ=$TZ
       - PUID=$PUID
@@ -114,6 +96,39 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     restart: unless-stopped
+  organizr:
+    image: organizr/organizr
+    container_name: organizr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/config/organizr:/config
+    networks:
+      - internal
+    ports:
+      - 8080:80
+    environment:
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    restart: unless-stopped
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - nginx-proxy
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - VIRTUAL_HOST=$HOSTNAME
+      - LETSENCRYPT_HOST=$HOSTNAME
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $USERDIR/config/ombi:/config
   tautulli:
     image: linuxserver/tautulli
     container_name: tautulli
@@ -129,21 +144,6 @@ services:
       - PGID=$PGID
       - VIRTUAL_HOST=history.$HOSTNAME
       - LETSENCRYPT_HOST=history.$HOSTNAME
-    restart: unless-stopped
-  organizr:
-    image: organizr/organizr
-    container_name: organizr
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/organizr:/config
-    networks:
-      - internal
-    ports:
-      - 8080:80
-    environment:
-      - TZ=$TZ
-      - PUID=$PUID
-      - PGID=$PGID
     restart: unless-stopped
   ddclient:
     image: linuxserver/ddclient

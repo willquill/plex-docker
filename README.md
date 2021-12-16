@@ -3,13 +3,13 @@
 This repo will help you deploy your own Plex infrastructure, including these Docker containers:
 
 * Plex
-* Ombi
 * Radarr
 * Sonarr
 * Bazarr
-* Tautulli
 * NZBGet
 * Organizr
+* Ombi
+* Tautulli
 * ddclient
 
 ## Tree Structure

@@ -56,7 +56,7 @@ In the proxy directory, rename `.env-sample` to `.env` and modify the email addr
 
 Launch the proxies:
 
-`cd ~/plex-docker/proxy && docker-compose up -d`
+`cd ~/plex-docker/proxy && docker compose up -d`
 
 ## Preparing your config
 
@@ -88,7 +88,7 @@ Then move it to the ddclient directory.
 
 Make sure you are inside the `~/plex-docker` directory when you run this.
 
-`docker-compose up -d`
+`docker compose up -d`
 
 ## Prepare nzbget.conf
 
@@ -101,7 +101,7 @@ DestDir=/downloads/completed
 
 Modify appropriately and then relaunch nzbget
 
-`docker-compose up -d --no-deps --build nzbget`
+`docker compose up -d --no-deps --build nzbget`
 
 ## Set up everything else
 
@@ -117,7 +117,8 @@ Examples:
 * https://yourdomain.com (for Ombi)
 * https://history.yourdomain.com (for Tautulli)
 
+## Troubleshooting
 
+If you're seeing odd behavior, make sure you are on docker version 20.
 
-
-
+`docker --version`

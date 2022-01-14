@@ -64,9 +64,14 @@ Make config directory.
 
 `mkdir ~/config`
 
-Create the directories. There's probably a more efficient way to do this, but it gets the job done.
+Create the directories.
 
-`mkdir config/nzbget && mkdir config/ombi && mkdir config/plexdata && mkdir config/radarr && mkdir config/sonarr && mkdir config/tautulli && mkdir config/bazarr && mkdir config/organizr && mkdir config/transcode`
+```sh
+for dir in nzbget ombi plexdata radarr sonarr tautulli bazarr organizr transcode
+do
+  mkdir config/$dir
+done
+```
 
 Prepare the env file.
 

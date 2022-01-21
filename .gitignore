@@ -1,7 +1,4 @@
 # Ignore these directories
 .env
 proxy/.env
-config/*/*
-
-# Keep these directories
-!/config/*
+config/**

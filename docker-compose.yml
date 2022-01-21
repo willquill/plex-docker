@@ -6,7 +6,7 @@ networks:
     external: false
 services:
   plex:
-    image: plexinc/pms-docker
+    image: plexinc/pms-docker:latest
     container_name: plex
     volumes:
       - $USERDIR/config/plexdata/config:/config
@@ -14,6 +14,7 @@ services:
       - $MEDIADIR/tv:/tv
       - $MEDIADIR/movies:/movies
       - $MEDIADIR/education:/education
+      - $MEDIADIR/audiobooks:/audiobooks
     networks:
       - internal
     ports:
@@ -32,6 +33,7 @@ services:
       - VERSION=latest
       - $ADVERTISEIP
     restart: unless-stopped
+    pull_policy: always
   radarr:
     image: linuxserver/radarr
     container_name: radarr

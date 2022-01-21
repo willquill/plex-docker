@@ -14,25 +14,25 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 
 ## Tree Structure
 
-This will be the structure of your files in your home directory. I've omitted the contents of the config directories in this example.
+This will be the structure of your files in your directory. I've omitted the contents of the config directories in this example.
 
 ```sh
-$ tree ~ -a -L 2
-.
-├── config
-│   ├── ddclient
-│   ├── nzbget
-│   ├── ombi
-│   ├── plexdata
-│   ├── radarr
-│   ├── sonarr
-│   ├── tautulli
-│   └── transcode
-├── plex-docker
+── plex-docker
+│   ├── config
+│   │   ├── bazarr
+│   │   ├── ddclient
+│   │   ├── nzbget
+│   │   ├── ombi
+│   │   ├── organizr
+│   │   ├── plexdata
+│   │   ├── radarr
+│   │   ├── sonarr
+│   │   ├── tautulli
+│   │   └── transcode
 │   ├── docker-compose.yml # This will launch the actual applications
 │   ├── .env
 │   ├── proxy
-│   │   ├── docker-compose.yml # This will launch the proxy for internet-facing applications
+│   │   ├── docker-compose.yml # This will launch the proxy for internet-facing 
 │   │   ├── .env
 ```
 
@@ -40,9 +40,9 @@ $ tree ~ -a -L 2
 
 Follow whatever guide you can find for your OS/distribution.
 
-## Clone this repository into your home directory
+## Clone this repository
 
-`cd ~ && git clone https://github.com/willquill/plex-docker.git`
+`git clone https://github.com/willquill/plex-docker.git`
 
 ## Getting Proxy ready *(optional)*
 
@@ -54,28 +54,23 @@ Create proxy network:
 
 In the proxy directory, rename `.env-sample` to `.env` and modify the email address within.
 
-Launch the proxies:
+Launch the proxy:
 
-`cd ~/plex-docker/proxy && docker compose up -d`
+`docker compose -f proxy/docker-compose.yml up -d`
 
 ## Preparing your config
 
-Make config directory.
+Everything here happens in the `plex-docker` directory.
 
-`mkdir ~/config`
+Create the directories:
 
-Create the directories.
+`plexdirs=(nzbget ombi plexdata radarr sonarr tautulli bazarr organizr transcode)`
 
-```sh
-for dir in nzbget ombi plexdata radarr sonarr tautulli bazarr organizr transcode
-do
-  mkdir config/$dir
-done
-```
+`for dir in $plexdirs; do mkdir $dir; done`
 
-Prepare the env file.
+Prepare the env file:
 
-`cd ~/plex-docker && mv .env-sample .env`
+`mv .env-sample .env`
 
 Now edit the env file for your needs.
 
@@ -83,21 +78,21 @@ Now edit the env file for your needs.
 
 I use Cloudflare, but you can find a default ddclient.conf file to see how to set it up for other providers.
 
-Edit the `~/plex-docker/ddclient.conf` file to match your parameters.
+Edit the `ddclient.conf` file to match your parameters.
 
 Then move it to the ddclient directory.
 
-`mv ddclient.conf ~/config/ddclient`
+`mv ddclient.conf config/ddclient`
 
 ## Launch your infrastructure
 
-Make sure you are inside the `~/plex-docker` directory when you run this.
+Make sure you are inside the `plex-docker` directory when you run this.
 
 `docker compose up -d`
 
 ## Prepare nzbget.conf
 
-This is what my primary directory paths look like in `~/config/nzbget/nzbget.conf`:
+This is what my primary directory paths look like in `config/nzbget/nzbget.conf`:
 
 ```sh
 MainDir=/config

@@ -9,8 +9,8 @@ services:
     image: plexinc/pms-docker:latest
     container_name: plex
     volumes:
-      - $USERDIR/config/plexdata/config:/config
-      - $USERDIR/config/transcode:/transcode
+      - ./config/plexdata/config:/config
+      - ./config/transcode:/transcode
       - $MEDIADIR/tv:/tv
       - $MEDIADIR/movies:/movies
       - $MEDIADIR/education:/education
@@ -35,11 +35,11 @@ services:
     restart: unless-stopped
     pull_policy: always
   radarr:
-    image: linuxserver/radarr
+    image: linuxserver/radarr:latest
     container_name: radarr
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/radarr:/config
+      - ./config/radarr:/config
       - $MEDIADIR/movies:/movies
       - $MEDIADIR/downloads:/downloads
     networks:
@@ -51,12 +51,13 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     restart: unless-stopped
+    pull_policy: always
   sonarr:
-    image: linuxserver/sonarr
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/sonarr:/config
+      - ./config/sonarr:/config
       - $MEDIADIR/tv:/tv
       - $MEDIADIR/downloads:/downloads
     networks:
@@ -68,26 +69,28 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     restart: unless-stopped
+    pull_policy: always
   bazarr:
-    image: lscr.io/linuxserver/bazarr
+    image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     environment:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
     volumes:
-      - $USERDIR/config/bazarr:/config
+      - ./config/bazarr:/config
       - $MEDIADIR/movies:/movies
       - $MEDIADIR/tv:/tv
     ports:
       - 6767:6767
     restart: unless-stopped
+    pull_policy: always
   nzbget:
-    image: linuxserver/nzbget
+    image: linuxserver/nzbget:latest
     container_name: nzbget
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/nzbget:/config
+      - ./config/nzbget:/config
       - $MEDIADIR/downloads:/downloads
     networks:
       - internal
@@ -98,12 +101,13 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     restart: unless-stopped
+    pull_policy: always
   organizr:
-    image: organizr/organizr
+    image: organizr/organizr:latest
     container_name: organizr
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/organizr:/config
+      - ./config/organizr:/config
     networks:
       - internal
     ports:
@@ -113,8 +117,9 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     restart: unless-stopped
+    pull_policy: always
   ombi:
-    image: linuxserver/ombi
+    image: linuxserver/ombi:latest
     container_name: ombi
     restart: unless-stopped
     security_opt:
@@ -130,14 +135,15 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $USERDIR/config/ombi:/config
+      - ./config/ombi:/config
+    pull_policy: always  
   tautulli:
-    image: linuxserver/tautulli
+    image: linuxserver/tautulli:latest
     container_name: tautulli
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERDIR/config/tautulli:/config
-      - $USERDIR/config/plexdata/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+      - ./config/tautulli:/config
+      - ./config/plexdata/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
     networks:
       - nginx-proxy
     environment:
@@ -147,8 +153,9 @@ services:
       - VIRTUAL_HOST=history.$HOSTNAME
       - LETSENCRYPT_HOST=history.$HOSTNAME
     restart: unless-stopped
+    pull_policy: always
   ddclient:
-    image: linuxserver/ddclient
+    image: linuxserver/ddclient:latest
     container_name: ddclient
     networks:
       - internal
@@ -157,5 +164,6 @@ services:
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $USERDIR/config/ddclient:/config
+      - ./config/ddclient:/config
     restart: unless-stopped
+    pull_policy: always

@@ -32,6 +32,9 @@ services:
       - PLEX_GID=$PGID
       - VERSION=latest
       - $ADVERTISEIP
+    devices:
+      - /dev/dri:/dev/dri
+    privileged: true
     restart: unless-stopped
     pull_policy: always
   radarr:

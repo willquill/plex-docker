@@ -74,6 +74,14 @@ Prepare the env file:
 
 Now edit the env file for your needs.
 
+## Preparing Plex
+
+If you do not use Intel QuickSync, remove the `devices` and `privileged` sections from the plex container in the `docker-compose.yml` file.
+
+If you do use Intel QuickSync, be sure to do the following:
+
+`sudo chmod -R 777 /dev/dri`
+
 ## Prepare ddclient
 
 I use Cloudflare, but you can find a default ddclient.conf file to see how to set it up for other providers.

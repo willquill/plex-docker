@@ -126,12 +126,13 @@ services:
     environment:
       - PUID=$PUID
       - PGID=$PGID
-      - TZ=America/Chicago
+      - TZ=$TZ
       - VIRTUAL_HOST=$PUBLICHOSTNAME
       - LETSENCRYPT_HOST=$PUBLICHOSTNAME
     volumes:
       - ./config/overseerr:/config
     restart: unless-stopped
+    pull_policy: always
   tautulli:
     image: linuxserver/tautulli:latest
     container_name: tautulli

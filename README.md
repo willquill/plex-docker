@@ -8,7 +8,7 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Bazarr
 * NZBGet
 * Organizr
-* Ombi
+* Overseerr
 * Tautulli
 * ddclient
 
@@ -22,7 +22,7 @@ This will be the structure of your files in your directory. I've omitted the con
 │   │   ├── bazarr
 │   │   ├── ddclient
 │   │   ├── nzbget
-│   │   ├── ombi
+│   │   ├── overseerr
 │   │   ├── organizr
 │   │   ├── plexdata
 │   │   ├── radarr
@@ -64,7 +64,7 @@ Everything here happens in the `plex-docker` directory.
 
 Create the directories:
 
-`plexdirs=(nzbget ombi plexdata radarr sonarr tautulli bazarr organizr transcode)`
+`plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode)`
 
 `for dir in $plexdirs; do mkdir $dir; done`
 
@@ -114,7 +114,7 @@ Examples:
 * http://localhost:8989 - Sonarr
 * http://localhost:7878 - Radarr
 * http://localhost:6767 - Bazarr
-* https://yourdomain.com (for Ombi)
+* https://yourdomain.com (for Overseerr)
 * https://history.yourdomain.com (for Tautulli)
 
 ## Troubleshooting

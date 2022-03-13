@@ -118,25 +118,20 @@ services:
       - PGID=$PGID
     restart: unless-stopped
     pull_policy: always
-  ombi:
-    image: linuxserver/ombi:latest
-    container_name: ombi
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+  overseerr:
+    image: lscr.io/linuxserver/overseerr
+    container_name: overseerr
     networks:
       - nginx-proxy
     environment:
       - PUID=$PUID
       - PGID=$PGID
-      - TZ=$TZ
-      - VIRTUAL_HOST=$HOSTNAME
-      - LETSENCRYPT_HOST=$HOSTNAME
+      - TZ=America/Chicago
+      - VIRTUAL_HOST=$PUBLICHOSTNAME
+      - LETSENCRYPT_HOST=$PUBLICHOSTNAME
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/ombi:/config
-    pull_policy: always  
+      - ./config/overseerr:/config
+    restart: unless-stopped
   tautulli:
     image: linuxserver/tautulli:latest
     container_name: tautulli
@@ -150,8 +145,8 @@ services:
       - TZ=$TZ
       - PUID=$PUID
       - PGID=$PGID
-      - VIRTUAL_HOST=history.$HOSTNAME
-      - LETSENCRYPT_HOST=history.$HOSTNAME
+      - VIRTUAL_HOST=history.$PUBLICHOSTNAME
+      - LETSENCRYPT_HOST=history.$PUBLICHOSTNAME
     restart: unless-stopped
     pull_policy: always
   ddclient:

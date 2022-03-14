@@ -15,6 +15,7 @@ services:
       - $MEDIADIR/movies:/movies
       - $MEDIADIR/education:/education
       - $MEDIADIR/audiobooks:/audiobooks
+      - $MEDIADIR/homevideos:/homevideos
     networks:
       - internal
     ports:

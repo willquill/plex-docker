@@ -125,6 +125,17 @@ Examples:
 * https://yourdomain.com (for Overseerr)
 * https://history.yourdomain.com (for Tautulli)
 
+## Upgrading
+
+Make the update script executable: `chmod +x update.sh`
+
+Execute the update script: `./update.sh`
+
+What the script does:
+
+* Rebuilds all containers with the image specified in the `image` line from the compose file. If this is `latest`, then it will of course get the latest version of that docker container.
+* Deletes images no longer used by containers
+
 ## Troubleshooting
 
 If you're seeing odd behavior, make sure you are on docker version 20.

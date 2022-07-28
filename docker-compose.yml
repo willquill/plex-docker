@@ -131,8 +131,8 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
-      - VIRTUAL_HOST=$PUBLICHOSTNAME
-      - LETSENCRYPT_HOST=$PUBLICHOSTNAME
+      - VIRTUAL_HOST=media.$PUBLICHOSTNAME
+      - LETSENCRYPT_HOST=media.$PUBLICHOSTNAME
     volumes:
       - ./config/overseerr:/config
     restart: unless-stopped
@@ -160,8 +160,8 @@ services:
     networks:
       - internal
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
+      - PUID=1000
+      - PGID=1000
       - TZ=$TZ
     volumes:
       - ./config/ddclient:/config

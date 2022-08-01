@@ -11,6 +11,7 @@ services:
       - letsencrypt-certs:/etc/nginx/certs
       - letsencrypt-vhost-d:/etc/nginx/vhost.d
       - letsencrypt-html:/usr/share/nginx/html
+    restart: unless-stopped
   letsencrypt-proxy:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: letsencrypt-proxy
@@ -22,7 +23,8 @@ services:
     environment:
       - DEFAULT_EMAIL=$EMAIL
       - NGINX_PROXY_CONTAINER=nginx-proxy
- 
+    restart: unless-stopped
+
 networks:
   default:
     name: nginx-proxy

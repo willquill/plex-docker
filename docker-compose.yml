@@ -167,3 +167,21 @@ services:
       - ./config/ddclient:/config
     restart: unless-stopped
     pull_policy: always
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=$PUID
+      - PGID=$PUID
+      - TZ=$TZ
+      - WEBUI_PORT=8090
+    volumes:
+      - ./config/qbittorrent:/config
+      - $MEDIADIR/downloads:/downloads
+      - $MEDIADIR/isos:/isos
+    ports:
+      - 8090:8090
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+    pull_policy: always

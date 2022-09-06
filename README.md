@@ -11,6 +11,7 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Overseerr
 * Tautulli
 * ddclient
+* Qbittorrent *(optional if you use NZBGet)*
 
 ## Tree Structure
 
@@ -25,6 +26,7 @@ This will be the structure of your files in your directory. I've omitted the con
 │   │   ├── overseerr
 │   │   ├── organizr
 │   │   ├── plexdata
+│   │   ├── qbittorrent
 │   │   ├── radarr
 │   │   ├── sonarr
 │   │   ├── tautulli
@@ -64,7 +66,7 @@ Everything here happens in the `plex-docker` directory.
 
 Create the directories:
 
-`plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode)`
+`plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode qbittorrent)`
 
 `for dir in $plexdirs; do mkdir $dir; done`
 
@@ -122,6 +124,7 @@ Examples:
 * http://localhost:8989 - Sonarr
 * http://localhost:7878 - Radarr
 * http://localhost:6767 - Bazarr
+* http://localhost:8090 - Qbittorrent
 * https://yourdomain.com (for Overseerr)
 * https://history.yourdomain.com (for Tautulli)
 
@@ -141,3 +144,29 @@ What the script does:
 If you're seeing odd behavior, make sure you are on docker version 20.
 
 `docker --version`
+
+## Notes
+
+### Docker Compose
+
+Depending on your configuration, the `docker compose` command may need a hyphen, so you may need to run `docker-compose up -d` instead of `docker compose up -d`.
+
+### Qbittorrent
+
+The official documentation for the [qbittorrent](https://hub.docker.com/r/linuxserver/qbittorrent) container uses webui port 8080 as a default. Since I'm using that for organizr, I changed qbittorrent to 8090.
+
+For qbittorrent WebUI, the default username is `admin` and the password is `adminadmin`.
+
+My qbittorrent container volumes are as follows:
+
+```yaml
+- ./config/qbittorrent:/config
+- $MEDIADIR/downloads:/downloads
+- $MEDIADIR/isos:/isos
+```
+
+I did this so that I can keep linux ISOs in the isos directory.
+
+## License
+
+Distributed under the MIT License. See LICENSE for more information.

@@ -160,8 +160,8 @@ services:
     networks:
       - internal
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=$DOCKERUSERNAME
+      - PGID=$DOCKERUSERGROUP
       - TZ=$TZ
     volumes:
       - ./config/ddclient:/config

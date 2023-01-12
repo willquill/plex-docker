@@ -13,30 +13,45 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * ddclient
 * Qbittorrent *(optional if you use NZBGet)*
 
-## Tree Structure
+## Directory Structure
 
 This will be the structure of your files in your directory. I've omitted the contents of the config directories in this example.
 
 ```sh
-── plex-docker
-│   ├── config
-│   │   ├── bazarr
-│   │   ├── ddclient
-│   │   ├── nzbget
-│   │   ├── overseerr
-│   │   ├── organizr
-│   │   ├── plexdata
-│   │   ├── qbittorrent
-│   │   ├── radarr
-│   │   ├── sonarr
-│   │   ├── tautulli
-│   │   └── transcode
-│   ├── docker-compose.yml # This will launch the actual applications
-│   ├── .env
-│   ├── proxy
-│   │   ├── docker-compose.yml # This will launch the proxy for internet-facing 
-│   │   ├── .env
+plex-docker
+ ├── config
+ │   ├── bazarr
+ │   ├── ddclient
+ │   ├── nzbget
+ │   ├── overseerr
+ │   ├── organizr
+ │   ├── plexdata
+ │   ├── qbittorrent
+ │   ├── radarr
+ │   ├── sonarr
+ │   ├── tautulli
+ │   └── transcode
+ ├── docker-compose.yml # Launches the actual services
+ ├── .env
+ ├── proxy
+ │   ├── docker-compose.yml # Launches a proxy for internet-facing services
+ │   ├── .env
 ```
+
+And this is what my media directory looks like:
+
+```sh
+/mnt/media
+├── audiobooks
+├── downloads
+├── education
+├── homevideos
+├── isos
+├── movies
+└── tv
+```
+
+For best performance, your `transcode` directory as defined in the `volumes` section of your plex service should exist locally instead of on a NAS.
 
 ## Install docker and docker-compose
 
@@ -64,17 +79,23 @@ Launch the proxy:
 
 Everything here happens in the `plex-docker` directory.
 
-Create the directories:
+Create the directories by copying and pasting this:
 
-`plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode qbittorrent)`
-
-`for dir in $plexdirs; do mkdir $dir; done`
+```sh
+cd config && \
+  plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode qbittorrent) && \
+  for dir in $plexdirs; do mkdir $dir; done
+```
 
 Prepare the env file:
 
 `mv .env-sample .env`
 
-Now edit the env file for your needs.
+Now edit the env file for your needs. For example, I store my `tv`, `movies`, and other media directories on my NAS, which is mounted to the `/mnt/media` directory. You will modify the value of `MEDIADIR` in your `.env` file to reflect the location of your files.
+
+Similarly, I keep this `plex-docker` directory inside my home folder. If you store it elsewhere, define its location in the `USERDIR` value.
+
+Don't forget to change the `.env` values of `PUID` and `GUID` to the values associated with the ownership of your media files!
 
 ## Preparing Plex
 
@@ -84,15 +105,23 @@ If you do use Intel QuickSync, be sure to do the following:
 
 `sudo chmod -R 777 /dev/dri`
 
+Also, if you use Intel QuickSync, the HDMI or DisplayPort port associated with Intel Graphics must be physically plugged into a monitor capable of the type of transcoding you wish to do. For example, 4K transcoding can only take place if a 4K monitor is plugged into this port.
+
+You may purchase a dummy plug to plug into the port in lieu of using an actual cable with a monitor. The dummy plugs stick out about an inch from the server's port and trick Intel QuickSync into thinking a monitor is plugged in. Search "dummy plug 4k" on your shopping site of choice to find one.
+
 ## Prepare ddclient
 
 I use Cloudflare, but you can find a default ddclient.conf file to see how to set it up for other providers.
 
 Edit the `ddclient.conf` file to match your parameters.
 
+The value of the password is the key found in Cloudflare at My Profile > API Tokens > Global API Key
+
 Then move it to the ddclient directory.
 
 `mv ddclient.conf config/ddclient`
+
+Important: The subdomain you use _must already exist_ in the zone. The ddclient container is capable of updating the existing A record but not creating one that does not exist. I usually create and point the A record to 1.1.1.1 before launching ddclient so that I can watch the IP address change after launch to confirm it works.
 
 ## Launch your infrastructure
 
@@ -150,6 +179,29 @@ If you're seeing odd behavior, make sure you are on docker version 20.
 ### Docker Compose
 
 Depending on your configuration, the `docker compose` command may need a hyphen, so you may need to run `docker-compose up -d` instead of `docker compose up -d`.
+
+### NAS Mount
+
+I use NFS to mount a remote directory (a Synology NAS on my home network) to a local directory.
+
+In my case, I added this line to `/etc/fstab`:
+
+```fstab
+10.1.20.91:/volume2/media /mnt/media nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+```
+
+The LAN IP of my Synology is 10.1.20.91, and I have a Shared Folder named `media` which has NFS sharing enabled.
+
+I use the following settings on the Synology for my `media` share:
+
+```txt
+Privilege: Read/Write
+Squash: No mapping
+Security: AUTH_SYS and Kerberos integrity
+All three checkboxes are enabled (async, non-privileged ports, allow mounting subfolders)
+```
+
+After updating your fstab, run `mount -a` in your terminal to mount the remote directory to the local directory. Note: You must first create the destination directory. Typically, `/mnt` already exists, so you only need to run `mkdir /mnt/media` to create the subdirectory. You can mount the remote directory anywhere, including your home folder.
 
 ### Qbittorrent
 

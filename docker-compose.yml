@@ -154,19 +154,6 @@ services:
       - LETSENCRYPT_HOST=history.$PUBLICHOSTNAME
     restart: unless-stopped
     pull_policy: always
-  ddclient:
-    image: linuxserver/ddclient:latest
-    container_name: ddclient
-    networks:
-      - internal
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=$TZ
-    volumes:
-      - ./config/ddclient:/config
-    restart: unless-stopped
-    pull_policy: always
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -185,3 +172,15 @@ services:
       - 6881:6881/udp
     restart: unless-stopped
     pull_policy: always
+  cloudflare-ddns:
+    image: timothyjmiller/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    security_opt:
+      - no-new-privileges:true
+    network_mode: 'host'
+    environment:
+      - PUID=$DOCKERUSERNAME
+      - PGID=$DOCKERUSERGROUP
+    volumes:
+      - ./config/cloudflare-ddns/config.json:/config.json
+    restart: unless-stopped

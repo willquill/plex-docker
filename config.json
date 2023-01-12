@@ -1,0 +1,15 @@
+{
+  "cloudflare": [{
+    "authentication": {
+      "api_token": "put-api-token-for-this-zone-here"
+    },
+    "zone_id": "put-zone-id-here",
+    "subdomains": [{
+      "name": "ddns",
+      "proxied": false
+    }]
+  }],
+  "a": true,
+  "aaaa": false,
+  "purgeUnknownRecords": false
+}

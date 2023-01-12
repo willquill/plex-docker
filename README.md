@@ -10,8 +10,8 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Organizr
 * Overseerr
 * Tautulli
-* ddclient
 * Qbittorrent *(optional if you use NZBGet)*
+* cloudflare-ddns
 
 ## Directory Structure
 
@@ -21,7 +21,7 @@ This will be the structure of your files in your directory. I've omitted the con
 plex-docker
  ├── config
  │   ├── bazarr
- │   ├── ddclient
+ │   ├── cloudflare-ddns
  │   ├── nzbget
  │   ├── overseerr
  │   ├── organizr
@@ -83,7 +83,7 @@ Create the directories by copying and pasting this:
 
 ```sh
 cd config && \
-  plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode qbittorrent) && \
+  plexdirs=(nzbget overseerr plexdata radarr sonarr tautulli bazarr organizr transcode qbittorrent cloudflare-ddns) && \
   for dir in $plexdirs; do mkdir $dir; done
 ```
 
@@ -109,17 +109,17 @@ Also, if you use Intel QuickSync, the HDMI or DisplayPort port associated with I
 
 You may purchase a dummy plug to plug into the port in lieu of using an actual cable with a monitor. The dummy plugs stick out about an inch from the server's port and trick Intel QuickSync into thinking a monitor is plugged in. Search "dummy plug 4k" on your shopping site of choice to find one.
 
-## Prepare ddclient
+## Prepare cloudflare-ddns
 
-I use Cloudflare, but you can find a default ddclient.conf file to see how to set it up for other providers.
+I use Cloudflare, but if you use something else for DDNS, you can swap it out for the ddclient Docker container. I used ddclient for a long time, but they were slow to adopt changes to the Cloudflare API, and I kept running into problems.
 
-Edit the `ddclient.conf` file to match your parameters. Then move it to the ddclient directory as follows: `mv ddclient.conf config/ddclient`
+Edit the `config.json` file to match your parameters. Then move it to the cloudflare-ddns directory as follows: `mv config.json config/cloudflare-ddns`
 
-The value of the password is the key found in Cloudflare at My Profile > API Tokens > Global API Key
+While the docker container supports your Cloudflare global API key via different config syntax, the way I structured my JSON is compatible with zone-specific API tokens. Note that you must allow **both** READ and EDIT.
 
-You may also choose to create an API key specific to the zone.
+If your domain is example.com, you may want to use media.example.com for Overseerr and history.example.com for Tautulli. To make things easier, I created an A record called ddns. And then I have a CNAME to point media and history to ddns.example.com. This way, I only need to put one subdomain in the config file.
 
-Important: The subdomain you use _must already exist_ in the zone. The ddclient container is capable of updating the existing A record but not creating one that does not exist. I usually create and point the A record to 1.1.1.1 before launching ddclient so that I can watch the IP address change after launch to confirm it works.
+The cloudflare-ddns config file supports not only multiple subdomains but multiple zones.
 
 ## Launch your infrastructure
 

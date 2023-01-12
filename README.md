@@ -113,13 +113,11 @@ You may purchase a dummy plug to plug into the port in lieu of using an actual c
 
 I use Cloudflare, but you can find a default ddclient.conf file to see how to set it up for other providers.
 
-Edit the `ddclient.conf` file to match your parameters.
+Edit the `ddclient.conf` file to match your parameters. Then move it to the ddclient directory as follows: `mv ddclient.conf config/ddclient`
 
 The value of the password is the key found in Cloudflare at My Profile > API Tokens > Global API Key
 
-Then move it to the ddclient directory.
-
-`mv ddclient.conf config/ddclient`
+You may also choose to create an API key specific to the zone.
 
 Important: The subdomain you use _must already exist_ in the zone. The ddclient container is capable of updating the existing A record but not creating one that does not exist. I usually create and point the A record to 1.1.1.1 before launching ddclient so that I can watch the IP address change after launch to confirm it works.
 

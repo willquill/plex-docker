@@ -13,11 +13,15 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Qbittorrent *(optional if you use NZBGet)*
 * cloudflare-ddns
 
-## TRaSH Guides
+## TRaSH Guide
 
 I *highly* recommend you follow [this](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/) TRaSH guide for Docker for **how to organize your media** as well as **how to mount directories in docker**.
 
 Before I converted my organization and my mounting to the TRaSH guide, I had issues with the \*arr apps often not being able to move downloaded files from my *intermediate/incomplete* to my *completed* directory.
+
+This is why you should use the TRaSH guide:
+
+> The default path setup suggested by some docker developers that encourages people to use mounts like /movies, /tv, /books or /downloads is very suboptimal and it makes them look like two or three file systems, even if they aren’t (Because of how Docker’s volumes work). It is the easiest way to get started. While easy to use, it has a major drawback. Mainly losing the ability to hardlink or instant move, resulting in a slower and more I/O intensive copy + delete is used.
 
 ## Directory Structure
 
@@ -156,7 +160,7 @@ This is what my primary directory paths look like in `config/nzbget/nzbget.conf`
 
 ```sh
 MainDir=/config
-DestDir=/data/usenet/completed
+DestDir=/data/usenet/complete
 ```
 
 Modify appropriately and then relaunch nzbget

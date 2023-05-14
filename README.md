@@ -40,15 +40,32 @@ plex-docker
 
 And this is what my media directory looks like:
 
+**Note: If I named things 100% according to the TRaSH guide linked in the section above, my paths would be:
+
+* /mnt/data/media/...
+* /mnt/data/torrents/...
+* /mnt/data/usenet/...
+
+I just prefer that my "data" directory be named `media` since it stores everything related to my media infrastructure, including the media itself.
+
 ```sh
 /mnt/media
-├── audiobooks
-├── downloads
-├── education
-├── homevideos
-├── isos
-├── movies
-└── tv
+├── media
+│   ├── audiobooks
+│   ├── education
+│   ├── homevideos
+│   ├── movies
+│   ├── music
+│   └── tv
+├── torrents
+│   ├── audiobooks
+│   ├── movies
+│   ├── music
+│   └── tv
+└── usenet
+    ├── complete
+    ├── completed
+    └── incomplete
 ```
 
 For best performance, your `transcode` directory as defined in the `volumes` section of your plex service should exist locally instead of on a NAS.

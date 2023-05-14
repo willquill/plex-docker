@@ -11,11 +11,7 @@ services:
     volumes:
       - ./config/plexdata/config:/config
       - ./config/transcode:/transcode
-      - $MEDIADIR/tv:/tv
-      - $MEDIADIR/movies:/movies
-      - $MEDIADIR/education:/education
-      - $MEDIADIR/audiobooks:/audiobooks
-      - $MEDIADIR/homevideos:/homevideos
+      - $MEDIADIR/media:/data/media
     networks:
       - internal
     ports:
@@ -44,8 +40,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config/radarr:/config
-      - $MEDIADIR/movies:/movies
-      - $MEDIADIR/downloads:/downloads
+      - $MEDIADIR:/data
     networks:
       - internal
     ports:
@@ -62,8 +57,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config/sonarr:/config
-      - $MEDIADIR/tv:/tv
-      - $MEDIADIR/downloads:/downloads
+      - $MEDIADIR:/data
     networks:
       - internal
     ports:
@@ -83,8 +77,7 @@ services:
       - PGID=$PGID
     volumes:
       - ./config/bazarr:/config
-      - $MEDIADIR/movies:/movies
-      - $MEDIADIR/tv:/tv
+      - $MEDIADIR/media:/data/media
     ports:
       - 6767:6767
     restart: unless-stopped
@@ -95,7 +88,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config/nzbget:/config
-      - $MEDIADIR/downloads:/downloads
+      - $MEDIADIR/usenet:/data/usenet:rw
     networks:
       - internal
     ports:
@@ -164,8 +157,7 @@ services:
       - WEBUI_PORT=8090
     volumes:
       - ./config/qbittorrent:/config
-      - $MEDIADIR/downloads:/downloads
-      - $MEDIADIR/isos:/isos
+      - $MEDIADIR/torrents:/data/torrents
     ports:
       - 8090:8090
       - 6881:6881

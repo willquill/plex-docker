@@ -13,6 +13,12 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Qbittorrent *(optional if you use NZBGet)*
 * cloudflare-ddns
 
+## TRaSH Guides
+
+I *highly* recommend you follow [this](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/) TRaSH guide for Docker for **how to organize your media** as well as **how to mount directories in docker**.
+
+Before I converted my organization and my mounting to the TRaSH guide, I had issues with the \*arr apps often not being able to move downloaded files from my *intermediate/incomplete* to my *completed* directory.
+
 ## Directory Structure
 
 This will be the structure of your files in your directory. I've omitted the contents of the config directories in this example.
@@ -133,7 +139,7 @@ This is what my primary directory paths look like in `config/nzbget/nzbget.conf`
 
 ```sh
 MainDir=/config
-DestDir=/downloads/completed
+DestDir=/data/usenet/completed
 ```
 
 Modify appropriately and then relaunch nzbget
@@ -211,8 +217,7 @@ My qbittorrent container volumes are as follows:
 
 ```yaml
 - ./config/qbittorrent:/config
-- $MEDIADIR/downloads:/downloads
-- $MEDIADIR/isos:/isos
+- $MEDIADIR/torrents:/data/torrents
 ```
 
 I did this so that I can keep linux ISOs in the isos directory.

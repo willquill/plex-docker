@@ -13,9 +13,10 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Organizr
 * Overseerr
 * Portainer
+* Qbittorrent *(optional if you use SABnzbd)*
 * SABnzbd
 * Tautulli
-* Qbittorrent *(optional if you use sabnzbd)*
+* Traefik
 * cloudflare-ddns
 
 ## What you get by using Traefik

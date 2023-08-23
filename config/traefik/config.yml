@@ -1,0 +1,112 @@
+http:
+ #region routers 
+  routers:
+    hoth:
+      entryPoints:
+        - "https"
+      rule: "Host(`hoth.{{env "PRIVATE_HOSTNAME"}}`)"
+      middlewares:
+        - secured
+        - https-redirectscheme
+      tls: {}
+      service: hoth
+    endor:
+      entryPoints:
+        - "https"
+      rule: "Host(`endor.{{env "PRIVATE_HOSTNAME"}}`)"
+      middlewares:
+        - secured
+        - https-redirectscheme
+      tls: {}
+      service: endor
+    yavin:
+      entryPoints:
+        - "https"
+      rule: "Host(`yavin.{{env "PRIVATE_HOSTNAME"}}`)"
+      middlewares:
+        - secured
+        - https-redirectscheme
+      tls: {}
+      service: yavin
+    omada:
+      entryPoints:
+        - "https"
+      rule: "Host(`oc.{{env "PRIVATE_HOSTNAME"}}`)"
+      middlewares:
+        - secured
+        - https-redirectscheme
+      tls: {}
+      service: omada
+    opnsense:
+      entryPoints:
+        - "https"
+      rule: "Host(`opn.{{env "PRIVATE_HOSTNAME"}}`)"
+      middlewares:
+        - secured
+        - https-redirectscheme
+      tls: {}
+      service: opnsense
+
+#endregion
+#region services
+  services:
+    hoth:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.20.10:8006"
+        passHostHeader: true
+    endor:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.20.11:8006"
+        passHostHeader: true
+    yavin:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.1.12:8006"
+        passHostHeader: true
+    omada:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.1.3:8043"
+        passHostHeader: true
+    opnsense:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.1.1"
+        passHostHeader: true
+#endregion
+  middlewares:
+    addprefix-pihole:
+      addPrefix:
+        prefix: "/admin"
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    default-whitelist:
+      IPWhiteList:
+        sourceRange:
+        - "10.0.0.0/8"
+        - "192.168.0.0/16"
+        - "172.16.0.0/12"
+
+    secured:
+      chain:
+        middlewares:
+        - default-whitelist
+        - default-headers

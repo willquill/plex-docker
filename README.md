@@ -156,6 +156,10 @@ Summary:
 - When it reads from the file, it just needs one `$`.
 - If adding it to the compose file directly, it needs two `$$`.
 
+#### Traefik: secrets
+
+Edit the two txt files in the `secrets` directory because Traefik uses the [cloudflare provider](https://doc.traefik.io/traefik/https/acme/#providers) to [authenticate](https://go-acme.github.io/lego/dns/cloudflare/) with the Cloudflare API.
+
 ### Preparing Plex
 
 If you do not use Intel QuickSync, remove the `devices` and `privileged` sections from the plex container in the `docker-compose.yml` file.

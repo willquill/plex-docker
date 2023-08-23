@@ -1,4 +1,1 @@
-# Ignore these directories
 .env
-proxy/.env
-config/**

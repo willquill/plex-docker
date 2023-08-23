@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Table of Contents
+
+- [1.0.0](#100)
+- [Previous releases](#previous-releases)
+
 ## [1.0.0] - 2023-08-22
 
 ### Added
@@ -26,3 +31,7 @@ n/a
 ### Removed
 
 - Nginx reverse proxy
+
+## Previous Releases
+
+Prior to 1.0.0, there were no official releases.

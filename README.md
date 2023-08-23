@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the deluxe version of my original [plex-docker](https://github.com/willquill/plex-docker) project. This version uses Traefik as a reverse proxy and includes a configuration that makes it as easily as possible to provide SSL and FQDNs for all of your services.
+In August 2023, I updated this project to use Traefik as a reverse proxy instead of Nginx. This changed the `docker-compose.yml` file considerably and introduced some new configuration files. See `CHANGELOG.md` for details.
 
 This repo will help you deploy your own Plex infrastructure, including these Docker containers:
 

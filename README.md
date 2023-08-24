@@ -12,7 +12,6 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * Sonarr
 * Organizr
 * Overseerr
-* Portainer
 * Qbittorrent *(optional if you use SABnzbd)*
 * SABnzbd
 * Tautulli
@@ -51,7 +50,6 @@ plex-docker-traefik
 │   ├── organizr
 │   ├── overseerr
 │   ├── plexdata
-│   ├── portainer
 │   ├── qbittorrent
 │   ├── radarr
 │   ├── sabnzbd
@@ -118,7 +116,7 @@ Create the directories by copying and pasting this:
 
 ```sh 
 cd config && \
-  plexdirs=(bazarr nzbget organizr overseerr plexdata portainer radarr sabnzbd sonarr tautulli transcode qbittorrent) && \
+  plexdirs=(bazarr nzbget organizr overseerr plexdata radarr sabnzbd sonarr tautulli transcode qbittorrent) && \
   for dir in $plexdirs; do mkdir $dir; done
 ```
 

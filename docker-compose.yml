@@ -14,6 +14,10 @@ x-security: &security
   security_opt:
     - no-new-privileges:true
 
+x-proxy-labels: &proxy-labels
+  traefik.enable: true
+  traefik.docker.network: "proxy"
+
 services:
   traefik:
     image: traefik:v2.10.1
@@ -55,27 +59,6 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=${PRIVATE_HOSTNAME}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${PRIVATE_HOSTNAME}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
-  portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    restart: unless-stopped
-    <<: [*networks-proxy, *security]
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/portainer:/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.entrypoints=http"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.portainer-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.portainer.middlewares=portainer-https-redirect,secured@file"
-      - "traefik.http.routers.portainer-secure.entrypoints=https"
-      - "traefik.http.routers.portainer-secure.rule=Host(`portainer.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.portainer-secure.tls=true"
-      - "traefik.http.routers.portainer-secure.service=portainer"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-      - "traefik.docker.network=proxy"
   plex:
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
@@ -86,7 +69,7 @@ services:
       - ./config/transcode:/transcode
       - $MEDIADIR/media:/data/media
     ports:
-      - "32400:32400/tcp" # need this so arrs can connect
+      - "32400:32400/tcp"
       - "3005:3005/tcp"
       - "8324:8324/tcp"
       - "32469:32469/tcp"
@@ -94,18 +77,17 @@ services:
       - "32410:32410/udp"
       - "32412-32414:32412-32414/udp"
       - "5353:5353/udp"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.plex.entrypoints=http"
-      - "traefik.http.routers.plex.rule=Host(`plex.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.plex-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.plex.middlewares=plex-https-redirect,secured@file"
-      - "traefik.http.routers.plex-secure.entrypoints=https"
-      - "traefik.http.routers.plex-secure.rule=Host(`plex.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.plex-secure.tls=true"
-      - "traefik.http.routers.plex-secure.service=plex"
-      - "traefik.http.services.plex.loadbalancer.server.port=32400"
-      - "traefik.docker.network=proxy"
+    labels: 
+      <<: *proxy-labels
+      traefik.http.routers.plex.entrypoints: "http"
+      traefik.http.routers.plex.rule: "Host(`plex.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.plex-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.plex.middlewares: "plex-https-redirect,secured@file"
+      traefik.http.routers.plex-secure.entrypoints: "https"
+      traefik.http.routers.plex-secure.rule: "Host(`plex.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.plex-secure.tls: "true"
+      traefik.http.routers.plex-secure.service: "plex"
+      traefik.http.services.plex.loadbalancer.server.port: "32400"
     devices:
       - /dev/dri:/dev/dri
     privileged: true
@@ -120,17 +102,16 @@ services:
       - ./config/radarr:/config
       - $MEDIADIR:/data
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.entrypoints=http"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.radarr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.radarr.middlewares=radarr-https-redirect,secured@file"
-      - "traefik.http.routers.radarr-secure.entrypoints=https"
-      - "traefik.http.routers.radarr-secure.rule=Host(`radarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.radarr-secure.tls=true"
-      - "traefik.http.routers.radarr-secure.service=radarr"
-      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.radarr.entrypoints: "http"
+      traefik.http.routers.radarr.rule: "Host(`radarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.radarr-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.radarr.middlewares: "radarr-https-redirect,secured@file"
+      traefik.http.routers.radarr-secure.entrypoints: "https"
+      traefik.http.routers.radarr-secure.rule: "Host(`radarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.radarr-secure.tls: "true"
+      traefik.http.routers.radarr-secure.service: "radarr"
+      traefik.http.services.radarr.loadbalancer.server.port: "7878"
     pull_policy: always
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -142,17 +123,16 @@ services:
       - ./config/sonarr:/config
       - $MEDIADIR:/data
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.entrypoints=http"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.sonarr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.sonarr.middlewares=sonarr-https-redirect,secured@file"
-      - "traefik.http.routers.sonarr-secure.entrypoints=https"
-      - "traefik.http.routers.sonarr-secure.rule=Host(`sonarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.sonarr-secure.tls=true"
-      - "traefik.http.routers.sonarr-secure.service=sonarr"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.sonarr.entrypoints: "http"
+      traefik.http.routers.sonarr.rule: "Host(`sonarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.sonarr-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.sonarr.middlewares: "sonarr-https-redirect,secured@file"
+      traefik.http.routers.sonarr-secure.entrypoints: "https"
+      traefik.http.routers.sonarr-secure.rule: "Host(`sonarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.sonarr-secure.tls: "true"
+      traefik.http.routers.sonarr-secure.service: "sonarr"
+      traefik.http.services.sonarr.loadbalancer.server.port: "8989"
     pull_policy: always
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -163,17 +143,16 @@ services:
       - ./config/bazarr:/config
       - $MEDIADIR/media:/data/media
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bazarr.entrypoints=http"
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.bazarr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.bazarr.middlewares=bazarr-https-redirect,secured@file"
-      - "traefik.http.routers.bazarr-secure.entrypoints=https"
-      - "traefik.http.routers.bazarr-secure.rule=Host(`bazarr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.bazarr-secure.tls=true"
-      - "traefik.http.routers.bazarr-secure.service=bazarr"
-      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.bazarr.entrypoints: "http"
+      traefik.http.routers.bazarr.rule: "Host(`bazarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.bazarr-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.bazarr.middlewares: "bazarr-https-redirect,secured@file"
+      traefik.http.routers.bazarr-secure.entrypoints: "https"
+      traefik.http.routers.bazarr-secure.rule: "Host(`bazarr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.bazarr-secure.tls: "true"
+      traefik.http.routers.bazarr-secure.service: "bazarr"
+      traefik.http.services.bazarr.loadbalancer.server.port: "6767"
     pull_policy: always
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
@@ -185,17 +164,16 @@ services:
       - ./config/sabnzbd:/config
       - $MEDIADIR/usenet:/data/usenet:rw
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sabnzbd.entrypoints=http"
-      - "traefik.http.routers.sabnzbd.rule=Host(`sab.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.sabnzbd-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.sabnzbd.middlewares=sabnzbd-https-redirect,secured@file"
-      - "traefik.http.routers.sabnzbd-secure.entrypoints=https"
-      - "traefik.http.routers.sabnzbd-secure.rule=Host(`sab.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.sabnzbd-secure.tls=true"
-      - "traefik.http.routers.sabnzbd-secure.service=sabnzbd"
-      - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.sabnzbd.entrypoints: "http"
+      traefik.http.routers.sabnzbd.rule: "Host(`sab.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.sabnzbd-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.sabnzbd.middlewares: "sabnzbd-https-redirect,secured@file"
+      traefik.http.routers.sabnzbd-secure.entrypoints: "https"
+      traefik.http.routers.sabnzbd-secure.rule: "Host(`sab.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.sabnzbd-secure.tls: "true"
+      traefik.http.routers.sabnzbd-secure.service: "sabnzbd"
+      traefik.http.services.sabnzbd.loadbalancer.server.port: "8080"
     pull_policy: always
   organizr:
     image: organizr/organizr:latest
@@ -206,17 +184,16 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./config/organizr:/config
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.organizr.entrypoints=http"
-      - "traefik.http.routers.organizr.rule=Host(`organizr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.organizr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.organizr.middlewares=organizr-https-redirect,secured@file"
-      - "traefik.http.routers.organizr-secure.entrypoints=https"
-      - "traefik.http.routers.organizr-secure.rule=Host(`organizr.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.organizr-secure.tls=true"
-      - "traefik.http.routers.organizr-secure.service=organizr"
-      - "traefik.http.services.organizr.loadbalancer.server.port=80"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.organizr.entrypoints: "http"
+      traefik.http.routers.organizr.rule: "Host(`organizr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.organizr-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.organizr.middlewares: "organizr-https-redirect,secured@file"
+      traefik.http.routers.organizr-secure.entrypoints: "https"
+      traefik.http.routers.organizr-secure.rule: "Host(`organizr.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.organizr-secure.tls: "true"
+      traefik.http.routers.organizr-secure.service: "organizr"
+      traefik.http.services.organizr.loadbalancer.server.port: "80"
     pull_policy: always
   overseerr:
     image: lscr.io/linuxserver/overseerr
@@ -224,17 +201,16 @@ services:
     restart: unless-stopped
     <<: [*networks-proxy, *environment]
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.overseerr.entrypoints=http"
-      - "traefik.http.routers.overseerr.rule=Host(`media.${PUBLIC_HOSTNAME}`)"
-      - "traefik.http.middlewares.overseerr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.overseerr.middlewares=overseerr-https-redirect"
-      - "traefik.http.routers.overseerr-secure.entrypoints=https"
-      - "traefik.http.routers.overseerr-secure.rule=Host(`media.${PUBLIC_HOSTNAME}`)"
-      - "traefik.http.routers.overseerr-secure.tls=true"
-      - "traefik.http.routers.overseerr-secure.service=overseerr"
-      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.overseerr.entrypoints: "http"
+      traefik.http.routers.overseerr.rule: "Host(`media.${PUBLIC_HOSTNAME}`)"
+      traefik.http.middlewares.overseerr-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.overseerr.middlewares: "overseerr-https-redirect"
+      traefik.http.routers.overseerr-secure.entrypoints: "https"
+      traefik.http.routers.overseerr-secure.rule: "Host(`media.${PUBLIC_HOSTNAME}`)"
+      traefik.http.routers.overseerr-secure.tls: "true"
+      traefik.http.routers.overseerr-secure.service: "overseerr"
+      traefik.http.services.overseerr.loadbalancer.server.port: "5055"
     volumes:
       - ./config/overseerr:/config
     pull_policy: always
@@ -244,17 +220,16 @@ services:
     restart: unless-stopped
     <<: [*networks-proxy, *environment]
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.tautulli.entrypoints=http"
-      - "traefik.http.routers.tautulli.rule=Host(`history.${PUBLIC_HOSTNAME}`)"
-      - "traefik.http.middlewares.tautulli-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.tautulli.middlewares=tautulli-https-redirect"
-      - "traefik.http.routers.tautulli-secure.entrypoints=https"
-      - "traefik.http.routers.tautulli-secure.rule=Host(`history.${PUBLIC_HOSTNAME}`)"
-      - "traefik.http.routers.tautulli-secure.tls=true"
-      - "traefik.http.routers.tautulli-secure.service=tautulli"
-      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.tautulli.entrypoints: "http"
+      traefik.http.routers.tautulli.rule: "Host(`history.${PUBLIC_HOSTNAME}`)"
+      traefik.http.middlewares.tautulli-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.tautulli.middlewares: "tautulli-https-redirect"
+      traefik.http.routers.tautulli-secure.entrypoints: "https"
+      traefik.http.routers.tautulli-secure.rule: "Host(`history.${PUBLIC_HOSTNAME}`)"
+      traefik.http.routers.tautulli-secure.tls: "true"
+      traefik.http.routers.tautulli-secure.service: "tautulli"
+      traefik.http.services.tautulli.loadbalancer.server.port: "8181"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config/tautulli:/config
@@ -269,17 +244,16 @@ services:
       - ./config/qbittorrent:/config
       - $MEDIADIR/torrents:/data/torrents
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qb.entrypoints=http"
-      - "traefik.http.routers.qb.rule=Host(`qb.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.qb-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.qb.middlewares=qb-https-redirect,secured@file"
-      - "traefik.http.routers.qb-secure.entrypoints=https"
-      - "traefik.http.routers.qb-secure.rule=Host(`qb.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.qb-secure.tls=true"
-      - "traefik.http.routers.qb-secure.service=qb"
-      - "traefik.http.services.qb.loadbalancer.server.port=8090"
-      - "traefik.docker.network=proxy"
+      <<: *proxy-labels
+      traefik.http.routers.qb.entrypoints: "http"
+      traefik.http.routers.qb.rule: "Host(`qb.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.qb-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.qb.middlewares: "qb-https-redirect,secured@file"
+      traefik.http.routers.qb-secure.entrypoints: "https"
+      traefik.http.routers.qb-secure.rule: "Host(`qb.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.qb-secure.tls: "true"
+      traefik.http.routers.qb-secure.service: "qb"
+      traefik.http.services.qb.loadbalancer.server.port: "8090"
     environment:
       - PUID=$PUID
       - PGID=$PUID

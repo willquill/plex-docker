@@ -7,8 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Table of Contents
 
+- [Unreleased](#unreleased)
 - [1.0.0](#100)
 - [Previous releases](#previous-releases)
+
+## Unreleased
+
+### Added
+
+n/a
+
+### Fixed
+
+n/a
+
+### Changed
+
+- Converted all docker compose service label sections from arrays to maps
+- Created new YAML anchor for default labels and implemented it
+
+### Removed
+
+- Portainer
 
 ## [1.0.0] - 2023-08-22
 

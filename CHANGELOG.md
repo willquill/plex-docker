@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Table of Contents
 
 - [Unreleased](#unreleased)
+- [1.0.1](#101)
 - [1.0.0](#100)
 - [Previous releases](#previous-releases)
 
@@ -23,11 +24,30 @@ n/a
 
 ### Changed
 
+n/a
+
+### Removed
+
+n/a
+
+## [1.0.1] - 2023-08-29
+
+### Added
+
+- Environment variables for Cloudflare authentication
+
+### Fixed
+
+- Cloudflare now authenticates successfully
+
+### Changed
+
 - Converted all docker compose service label sections from arrays to maps
 - Created new YAML anchor for default labels and implemented it
 
 ### Removed
 
+- Docker secrets directory which previously stored Cloudflare credentials
 - Portainer
 
 ## [1.0.0] - 2023-08-22

@@ -28,10 +28,10 @@ services:
       - 80:80
       - 443:443
     environment:
-      - CF_API_EMAIL=/run/secrets/cf_api_email
+      - CF_API_EMAIL=$CF_API_EMAIL
       # Be sure to use the correct one depending on if you are using a token or key
       #- CF_DNS_API_TOKEN=/run/secrets/cf_api_token
-      - CF_API_KEY=/run/secrets/cf_api_key
+      - CF_API_KEY=$CF_API_KEY
       - PRIVATE_HOSTNAME
     secrets:
       - cf_api_email
@@ -44,21 +44,21 @@ services:
       - ./config/traefik/config.yml:/config.yml:ro
       - ./config/traefik/usersfile.txt:/usersfile.txt
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.middlewares.traefik-auth.basicauth.usersfile=/usersfile.txt"
-      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect,secured@file"
-      - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${PRIVATE_HOSTNAME}`)"
-      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth,secured@file"
-      - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${PRIVATE_HOSTNAME}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${PRIVATE_HOSTNAME}"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
+      traefik.enable: true
+      traefik.http.routers.traefik.entrypoints: "http"
+      traefik.http.routers.traefik.rule: "Host(`traefik.${PRIVATE_HOSTNAME}`)"
+      traefik.http.middlewares.traefik-auth.basicauth.usersfile: "/usersfile.txt"
+      traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto: "https"
+      traefik.http.routers.traefik.middlewares: "traefik-https-redirect,secured@file"
+      traefik.http.routers.traefik-secure.entrypoints: "https"
+      traefik.http.routers.traefik-secure.rule: "Host(`traefik.${PRIVATE_HOSTNAME}`)"
+      traefik.http.routers.traefik-secure.middlewares: "traefik-auth,secured@file"
+      traefik.http.routers.traefik-secure.tls: "true"
+      traefik.http.routers.traefik-secure.tls.certresolver: "cloudflare"
+      traefik.http.routers.traefik-secure.tls.domains[0].main: "${PRIVATE_HOSTNAME}"
+      traefik.http.routers.traefik-secure.tls.domains[0].sans: "*.${PRIVATE_HOSTNAME}"
+      traefik.http.routers.traefik-secure.service: "api@internal"
   plex:
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
@@ -275,12 +275,3 @@ services:
 networks:
   proxy:
     external: true
-
-secrets:
-  cf_api_email:
-    file: ./secrets/cf_api_email.txt
-  cf_api_key:
-    file: ./secrets/cf_api_key.txt
-  # Use this or use cf_api_key but don't use both
-  #cf_api_token:
-  #  file: ./secrets/cf_api_token.txt

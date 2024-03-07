@@ -6,7 +6,7 @@
     "zone_id": "put-zone-id-here",
     "subdomains": [{
       "name": "ddns",
-      "proxied": false
+      "proxied": true # With this as true, your IP address will not be exposed
     }]
   }],
   "a": true,

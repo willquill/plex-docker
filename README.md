@@ -12,7 +12,7 @@ This repo will help you deploy your own Plex infrastructure, including these Doc
 * [Sonarr](https://sonarr.tv/)
 * [Organizr](https://github.com/causefx/Organizr?tab=readme-ov-file)
 * [Overseerr](https://overseerr.dev/)
-* [Qbittorrent](https://www.qbittorrent.org/) *(optional if you use SABnzbd)*
+* [Qbittorrent](https://www.qbittorrent.org/) *(optional if you use [SABnzbd](https://sabnzbd.org/))*
 * [SABnzbd](https://sabnzbd.org/)
 * [Tautulli](https://tautulli.com/)
 * [Traefik](https://traefik.io/traefik/)

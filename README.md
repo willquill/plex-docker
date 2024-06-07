@@ -6,17 +6,17 @@ In August 2023, I updated this project to use Traefik as a reverse proxy instead
 
 This repo will help you deploy your own Plex infrastructure, including these Docker containers:
 
-* Plex
-* Bazarr
-* Radarr
-* Sonarr
-* Organizr
-* Overseerr
-* Qbittorrent *(optional if you use SABnzbd)*
-* SABnzbd
-* Tautulli
-* Traefik
-* cloudflare-ddns
+* [Plex](https://www.plex.tv/)
+* [Bazarr](https://www.bazarr.media/)
+* [Radarr](https://radarr.video/)
+* [Sonarr](https://sonarr.tv/)
+* [Organizr](https://github.com/causefx/Organizr?tab=readme-ov-file)
+* [Overseerr](https://overseerr.dev/)
+* [Qbittorrent](https://www.qbittorrent.org/) *(optional if you use [SABnzbd](https://sabnzbd.org/))*
+* [SABnzbd](https://sabnzbd.org/)
+* [Tautulli](https://tautulli.com/)
+* [Traefik](https://traefik.io/traefik/)
+* [cloudflare-ddns](https://www.cloudflare.com/learning/dns/glossary/dynamic-dns/)
 
 ## What you get by using Traefik
 
